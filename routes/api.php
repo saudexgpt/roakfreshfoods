@@ -49,7 +49,7 @@ $router->get('reserved-', 'DebugController@reservedProducts');
 $router->get('stock-balance', 'DebugController@balanceStockAccount');
 $router->get('stock-balance-product', 'DebugController@balanceStockAccountPerProduct');
 $router->get('balance-invoice-items', 'DebugController@balanceInvoiceItems');
-$router->get('stabilize-account', 'DeproductbugController@stabilizeAccount');
+$router->get('stabilize-account', 'DebugController@stabilizeAccount');
 $router->get('reset', 'DebugController@resetStock');
 $router->get('split', 'DebugController@splitExcessStock');
 $router->get('stabilize-invoice-items', 'Invoice\InvoicesController@stabilizeInvoiceItems');
