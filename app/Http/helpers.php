@@ -1048,7 +1048,7 @@ function formatUniqNo($no)
 }
 function mainDomainPublicPath($folder = null)
 {
-    return "https://edu-drive.com/" . $folder;
+    return "https://roakfreshfoods.com.ng/" . $folder;
 }
 function subdomainPublicPath($folder = null)
 {
@@ -1057,9 +1057,9 @@ function subdomainPublicPath($folder = null)
 
 function portalPulicPath($folder = null)
 {
-    return public_path($folder);
+    // return public_path($folder);
     // return storage_path('app/public/' . $folder);
-    // return "/home/edudrive/api.edu-drive.com/storage/" . $folder;
+    return "/var/www/roakfreshfoods.com.ng/storage/" . $folder;
 }
 
 function folderSize($dir)
