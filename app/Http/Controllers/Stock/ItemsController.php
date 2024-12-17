@@ -1,0 +1,223 @@
+<?php
+
+namespace App\Http\Controllers\Stock;
+
+use App\Http\Controllers\Controller;
+use App\Models\Stock\Item;
+use App\Models\Stock\ItemPrice;
+use App\Models\Stock\ItemTax;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
+class ItemsController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+        $itemQuery = Item::query();
+        $itemQuery->with('category', 'price');
+        if (isset($request->category_id) && $request->category_id !== '') {
+
+            $category_id = $request->category_id;
+            $itemQuery->where('category_id', $category_id);
+        }
+
+
+        $items = $itemQuery->orderBy('items.name')->select('*', 'items.id as id', 'items.name as name')->get();
+        return response()->json(compact('items'));
+    }
+
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Stock\Item  $item
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Item $item)
+    {
+
+        $item = $item->with(['category', /*'stocks',*/ 'taxes', 'price'])->find($item->id);
+        // $item->currency_id = $item->price->currency_id;
+        // $item->purchase_price = $item->price->purchase_price;
+        // $item->sale_price = $item->price->sale_price;
+        return response()->json(compact('item'), 200);
+    }
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+
+    public function store(Request $request, Item $item)
+    {
+        //
+        $user = $this->getUser();
+        $tax_ids = $request->tax_ids;
+        $name = $request->name;
+        $category_id = $request->category_id;
+        // $sku = $request->sku;
+        $package_type = $request->package_type;
+        $quantity_per_carton = $request->quantity_per_carton;
+        $description = $request->description;
+        $basic_unit = $request->basic_unit;
+        $basic_unit_quantity_per_package_type = $request->basic_unit_quantity_per_package_type;
+        $picture = $request->picture;
+        $item = Item::where('name', $name)->first();
+
+        if (!$item) {
+            $item = new Item();
+            $item->name = $name;
+            $item->slug = generateProductSlug($name);
+            // Str::acronym($name);
+            $item->package_type = $package_type;
+            $item->quantity_per_carton = $quantity_per_carton;
+            $item->category_id = $category_id;
+            $item->basic_unit = $basic_unit;
+            $item->basic_unit_quantity_per_package_type = $basic_unit_quantity_per_package_type;
+            // $item->sku = $sku;
+            $item->description = $description;
+            $item->picture = $picture;
+            $item->save();
+
+            $this->setProductCode($item);
+            // save item taxes
+            if ($tax_ids) {
+                foreach ($tax_ids as $tax_id) {
+                    $item_tax = new ItemTax();
+                    $item_tax->tax_id = $tax_id;
+                    $item_tax->item_id = $item->id;
+                    $item_tax->save();
+                }
+            }
+            //save item price
+            $item_price = new ItemPrice();
+            $item_price->item_id = $item->id;
+            $item_price->currency_id = $request->currency_id;
+            $item_price->sale_price = $request->sale_price;
+            $item_price->cost_price = $request->cost_price;
+            $item_price->save();
+            // log this action
+            $title = "Product Added";
+            $description = $name . " added to list of products by " . $user->name;
+            ;
+            $roles = ['assistant admin', 'warehouse manager', 'warehouse auditor'];
+            $this->logUserActivity($title, $description, $roles);
+            return $this->show($item);
+        }
+        return response()->json(['message' => 'Duplicate SKU'], 500);
+    }
+
+    private function setProductCode($item)
+    {
+        $item_id = $item->id;
+        $digit_of_next_no = strlen($item_id);
+        $unused_digit = 5 - $digit_of_next_no;
+        $zeros = '';
+        for ($i = 1; $i <= $unused_digit; $i++) {
+            $zeros .= '0';
+        }
+
+        $code = 'PDT' . $zeros . $item_id;
+        $item->code = $code;
+        $item->save();
+    }
+
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Item\Item  $item
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Item $item)
+    {
+        //
+        $user = $this->getUser();
+        $tax_ids = $request->tax_ids;
+        $item->name = $request->name;
+        $item->slug = generateProductSlug($item->name);
+        $item->category_id = $request->category_id;
+        $item->package_type = $request->package_type;
+        $item->quantity_per_carton = $request->quantity_per_carton;
+        $item->basic_unit = $request->basic_unit;
+        $item->basic_unit_quantity_per_package_type = $request->basic_unit_quantity_per_package_type;
+        // $item->sku = $request->sku;
+        $item->description = $request->description;
+        $item->picture = $request->picture;
+        $item->save();
+
+        //update item price
+        $item_price = ItemPrice::where('item_id', $item->id)->first();
+        if (!$item_price) {
+            $item_price = new ItemPrice();
+        }
+        $item_price->item_id = $item->id;
+        $item_price->currency_id = $request->currency_id;
+        $item_price->sale_price = $request->sale_price;
+        // $item_price->purchase_price = $request->purchase_price;
+        $item_price->save();
+
+        //update item tax
+        if ($tax_ids) {
+            foreach ($tax_ids as $tax_id) {
+                $item_tax = ItemTax::where(['item_id' => $item->id, 'tax_id' => $tax_id])->first();
+                if (!$item_tax) {
+                    $item_tax = new ItemTax();
+                    $item_tax->tax_id = $tax_id;
+                    $item_tax->item_id = $item->id;
+                    $item_tax->save();
+                }
+            }
+        }
+        $title = "Product details modified";
+        $description = "Product information with ID $item->id  was modified by " . $user->name;
+        ;
+        $roles = ['assistant admin', 'warehouse manager', 'warehouse auditor'];
+        $this->logUserActivity($title, $description, $roles);
+        return $this->show($item);
+    }
+    public function destroyItemTax(Request $request)
+    {
+        //
+        $tax = Item::find($request->item_id); // ->taxes()->where('tax_id', $request->tax_id)->first();
+        $tax->taxes()->detach($request->tax_id);
+
+        //$item_tax->delete();
+        return response()->json(null, 204);
+    }
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Item\Item  $item
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Item $item)
+    {
+        // first log this event
+        $user = $this->getUser();
+        $title = "Product deleted";
+        $description = $item->name . " was removed from list of products by " . $user->name;
+        $roles = ['assistant admin', 'warehouse manager', 'warehouse auditor'];
+        $this->logUserActivity($title, $description, $roles);
+
+        $item->taxes()->detach(); //use detach for pivoted relationship (hasManyThrough)
+        $item->price()->delete();
+        $item->delete();
+        return response()->json(null, 204);
+    }
+
+    public function enableOrDisableItem(Request $request, Item $item)
+    {
+        $status = $item->enabled;
+        $item->enabled = !$status;
+        $item->save();
+        return response()->json(compact('item'), 200);
+    }
+}
