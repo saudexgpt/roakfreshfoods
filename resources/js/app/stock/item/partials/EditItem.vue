@@ -180,6 +180,7 @@ export default {
       form.currency_id = app.item_price.currency_id;
       // form.purchase_price = app.item_price.purchase_price;
       form.sale_price = app.item_price.sale_price;
+      form.cost_price = app.item_price.cost_price;
       updateProduct.update(form.id, form)
         .then(response => {
           app.$message({ message: 'Product Updated Successfully!!!', type: 'success' });
