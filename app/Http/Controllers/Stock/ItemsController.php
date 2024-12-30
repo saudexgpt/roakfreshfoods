@@ -161,6 +161,7 @@ class ItemsController extends Controller
         $item_price->item_id = $item->id;
         $item_price->currency_id = $request->currency_id;
         $item_price->sale_price = $request->sale_price;
+        $item_price->cost_price = $request->cost_price;
         // $item_price->purchase_price = $request->purchase_price;
         $item_price->save();
 
