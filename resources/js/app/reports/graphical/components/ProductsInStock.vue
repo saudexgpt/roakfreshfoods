@@ -58,7 +58,7 @@ export default {
         xAxis: {
           categories: [], // type: 'category', // categories: [],
           min: 0,
-          // max: 3,
+          max: 4,
           labels: {
             skew3d: true,
             style: {

@@ -285,7 +285,7 @@ class Controller extends BaseController
         $categories = Category::get();
         $product_types = ['Confectionaries', 'Cosmetics', 'Electronics', 'Pharma', 'Promo', 'Seagreen'];
         $expense_types = ['Insurance', 'Maintenance / Repairs', 'Fuel'];
-        $package_types = ['Cartons', 'Kilo', 'Packets', 'Pieces'];
+        $package_types = ['Bags', 'Cartons', 'Kg', 'Ltrs', 'Packets', 'Pieces'];
         $product_return_reasons = ['Product short-dated', 'Mass return - expired', 'Mass return - unexpired', 'Rep. resignation/sack - expired', 'Rep. resignation/sack - unexpired', 'Spillage', 'Others'];
         $teams = ['Allied', 'Bull', 'Confectionaries', 'Cosmestics', 'Consumer Health Team', 'Eagle', 'East Market Area', 'Electronics', 'Falcons', 'Funbact', 'Jaguar', 'Key Account', 'Lagos Market Area', 'Lion', 'National Market Business Area', 'North Market Area', 'REP', 'Stallion', 'West Market Area'];
         $dispatch_companies = ['GREENLIFE LOGISTICS', 'COURIER SERVICE', 'FOB (Free On Board)'];
