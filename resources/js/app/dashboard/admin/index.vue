@@ -1,40 +1,97 @@
 <template>
   <div class="dashboard-editor-container">
-    <panel-group v-if="data_summary" :data-summary="data_summary" />
-
+    <el-row :gutter="10" class="panel-group">
+      <el-col :md="6">
+        <panel-group v-if="data_summary" :data-summary="data_summary" />
+      </el-col>
+      <el-col :md="18">
+        <el-row :gutter="10" class="panel-group">
+          <el-col :md="6" class="card-panel-col">
+            <router-link :to="{name: 'ManageItem'}">
+              <el-card shadow="hover">
+                <h3>
+                  <i class="el-icon-present" />
+                  <span>Products</span>
+                </h3>
+              </el-card>
+            </router-link>
+          </el-col>
+          <el-col :md="6" class="card-panel-col">
+            <router-link :to="{name: 'CreateInvoice'}">
+              <el-card shadow="hover">
+                <h3>
+                  <i class="el-icon-sell" />
+                  <span>New Sales</span>
+                </h3>
+              </el-card>
+            </router-link>
+          </el-col>
+          <el-col :md="6" class="card-panel-col">
+            <router-link :to="{name: 'Invoices'}">
+              <el-card shadow="hover">
+                <h3>
+                  <i class="el-icon-money" />
+                  <span>Income</span>
+                </h3>
+              </el-card>
+            </router-link>
+          </el-col>
+          <el-col :md="6" class="card-panel-col">
+            <router-link :to="{name: 'Expenses'}">
+              <el-card shadow="hover">
+                <h3>
+                  <i class="el-icon-s-finance" />
+                  <span>Expenses</span>
+                </h3>
+              </el-card>
+            </router-link>
+          </el-col>
+          <el-col :md="6" class="card-panel-col">
+            <router-link :to="{name: 'ViewWarehouse'}">
+              <el-card shadow="hover">
+                <h3>
+                  <i class="el-icon-house" />
+                  <span>Stores</span>
+                </h3>
+              </el-card>
+            </router-link>
+          </el-col>
+          <el-col :md="6" class="card-panel-col">
+            <router-link :to="{name: 'CustomerList'}">
+              <el-card shadow="hover">
+                <h3>
+                  <i class="el-icon-user" />
+                  <span>Customers</span>
+                </h3>
+              </el-card>
+            </router-link>
+          </el-col>
+          <el-col :md="6" class="card-panel-col">
+            <router-link :to="{name: 'BinCard'}">
+              <el-card shadow="hover">
+                <h3>
+                  <i class="el-icon-files" />
+                  <span>Stock Balance</span>
+                </h3>
+              </el-card>
+            </router-link>
+          </el-col>
+          <el-col :md="6" class="card-panel-col">
+            <router-link :to="{name: 'GraphicalReports'}">
+              <el-card shadow="hover">
+                <h3>
+                  <i class="el-icon-data-analysis" />
+                  <span>Report</span>
+                </h3>
+              </el-card>
+            </router-link>
+          </el-col>
+        </el-row>
+      </el-col>
+    </el-row>
     <el-row>
       <graphical-report :use-carousel="true" />
     </el-row>
-
-    <!-- <el-row :gutter="10">
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <raddar-chart />
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <pie-chart />
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <bar-chart />
-        </div>
-      </el-col>
-    </el-row> -->
-
-    <!-- <el-row :gutter="8">
-      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 12}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:30px;">
-        <transaction-table />
-      </el-col>
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
-        <todo-list />
-      </el-col>
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
-        <box-card />
-      </el-col>
-    </el-row> -->
   </div>
 </template>
 
@@ -74,11 +131,17 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .dashboard-editor-container {
-  padding: 10px;
-  background-color: rgb(240, 242, 245);
-  .chart-wrapper {
-    background: #fff;
-    padding: 16px 16px 0;
+padding: 10px;
+background-color: rgb(240, 242, 245);
+.chart-wrapper {
+background: #fff;
+padding: 16px 16px 0;
+margin-bottom: 10px;
+}
+}
+.panel-group {
+  margin-top: 5px;
+  .card-panel-col{
     margin-bottom: 10px;
   }
 }

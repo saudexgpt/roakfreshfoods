@@ -1,6 +1,6 @@
 <template>
   <el-row :gutter="10" class="panel-group">
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    <el-col :md="24">
       <router-link :to="{name: 'ViewWarehouse'}">
         <div class="small-box bg-aqua-gradient">
           <div class="inner">
@@ -13,7 +13,7 @@
         </div>
       </router-link>
     </el-col>
-    <!-- <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    <!-- <el-col :md="24" class="card-panel-col">
       <router-link :to="{name: 'Vehicles'}">
         <div class="small-box bg-green-gradient">
           <div class="inner">
@@ -26,7 +26,7 @@
         </div>
       </router-link>
     </el-col> -->
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    <el-col :md="24">
       <router-link :to="{name: 'ManageItem'}">
         <div class="small-box bg-maroon-gradient">
           <div class="inner">
@@ -39,7 +39,7 @@
         </div>
       </router-link>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    <el-col :md="24">
       <router-link :to="{name: 'Invoices'}">
         <div class="small-box bg-red-gradient">
           <div class="inner">

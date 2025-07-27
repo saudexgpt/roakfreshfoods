@@ -192,6 +192,12 @@ aside {
 .multiselect--active {
   z-index: 1000 !important;
 }
+
 .alert-dark {
   background-color: #000000;
+}
+
+.is-hover-shadow:hover {
+  background-color: #f0f0f0;
+  /* Optional: change text color on hover */
 }

@@ -28,7 +28,7 @@ const permissionRoutes = {
       component: () => import('@/app/invoice/Invoice'),
       name: 'Invoices',
       meta: {
-        title: 'Sales List',
+        title: 'Income',
         permissions: ['create invoice', 'view invoice'],
       },
     },
